@@ -21,6 +21,10 @@
         }
       }
     },
+    Mcp: {
+      Enabled: true,
+      Path: /mcp
+    },
     Host: {
       Cors: {
         Origins: [
@@ -3442,6 +3446,19 @@
                 Action: Read
               }
             ]
+          },
+          {
+            Role: TestFieldExcludedForAggregation,
+            Actions: [
+              {
+                Action: Read,
+                Fields: {
+                  Exclude: [
+                    publisher_id
+                  ]
+                }
+              }
+            ]
           }
         ],
         Mappings: {
@@ -3608,6 +3625,65 @@
             ]
           }
         }
+      }
+    },
+    {
+      DateOnlyTable: {
+        Source: {
+          Object: date_only_table,
+          Type: Table,
+          KeyFields: [
+            event_date
+          ]
+        },
+        GraphQL: {
+          Singular: DateOnlyTable,
+          Plural: DateOnlyTables,
+          Enabled: true
+        },
+        Rest: {
+          Enabled: true
+        },
+        Permissions: [
+          {
+            Role: anonymous,
+            Actions: [
+              {
+                Action: *
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      GetBooksAuth: {
+        Source: {
+          Object: get_books,
+          Type: stored-procedure
+        },
+        GraphQL: {
+          Singular: GetBooksAuth,
+          Plural: GetBooksAuths,
+          Enabled: true,
+          Operation: Query
+        },
+        Rest: {
+          Methods: [
+            Get
+          ],
+          Enabled: true
+        },
+        Permissions: [
+          {
+            Role: teststoredprocauth,
+            Actions: [
+              {
+                Action: Execute
+              }
+            ]
+          }
+        ]
       }
     }
   ]
